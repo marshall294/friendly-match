@@ -1,0 +1,285 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Matchday Display</title>
+    <!-- Include Firebase SDKs (compat version for backward compatibility) -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <link rel="stylesheet" href="pop.css">
+    <script src="pop.js"></script>
+    <style>
+        /* Your existing styles */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #ff6f61, #6a85b6, #feb47b, #4a90e2);
+            background-size: 800% 800%;
+            animation: backgroundColorChange 10s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        @keyframes backgroundColorChange {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .nav {
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            text-align: left;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-family: 'Montserrat', sans-serif;
+            margin-left: 20px;
+        }
+
+        .nav a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            width: 80%;
+            max-width: 800px;
+            margin-top: 60px; /* Added margin for nav bar */
+        }
+
+        .title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5em;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            animation: text-flicker 2s infinite;
+        }
+
+        @keyframes text-flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .details {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .fixture {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2em;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        /* 3D Multicolor Text Effect for Team Names */
+        .fixture span {
+            font-size: 2.5em;
+            color: #fff;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #ff6f61, #feb47b, #6a85b6, #4a90e2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            display: inline-block;
+            text-shadow: 2px 2px 0px rgba(255, 0, 0, 0.6),
+                         4px 4px 0px rgba(0, 255, 0, 0.6),
+                         6px 6px 0px rgba(0, 0, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .fixture span {
+                font-size: 1.5em; /* Adjusted for smaller screens */
+                text-shadow: 1px 1px 0px rgba(255, 0, 0, 0.6),
+                             2px 2px 0px rgba(0, 255, 0, 0.6),
+                             3px 3px 0px rgba(0, 0, 255, 0.6);
+            }
+        }
+
+        .countdown {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+
+        .footer {
+            font-size: 0.9em;
+            margin-top: 30px;
+            animation: fadeIn 3s ease-in-out;
+        }
+
+        .footer a {
+            color: #00e676;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="nav">
+        <a href="index.html">Home</a>
+        <a href="team-list.html">Team-List H</a>
+        <a href="team-list2.html">Team-List A</a>
+    </div>
+
+    <div class="container">
+        <div class="title">FRIENDLY MATCH</div>
+        <div class="details">TECHNICAL COLLEGE KWAMBA-SULEJA | SEPTEMBER 8, 2024</div>
+        <div class="fixture">
+            <span>Riders FC</span> <strong>VS</strong> <span>Golden Star FC</span>
+        </div>
+        <div id="countdown" class="countdown"></div>
+        <div class="footer">
+            Designed by MathCloud-Tech | 
+            <a href="https://wa.me/2348102341648?text=Hello%20MathCloud-Tech,%20I%20would%20like%20to%20know%20more%20about%20the%20FRIENDLY%20MATCH." target="_blank">
+                WhatsApp: +2348102341648
+            </a>
+        </div>
+    </div>
+    <!-- Pop-Up Ad -->
+    <div id="ad-popup" class="ad-popup">
+        <div class="ad-content">
+            <div class="slideshow-container">
+                <div class="slide fade">
+                    <img src="r.jpeg" alt="Slide 1">
+                </div>
+                <div class="slide fade">
+                    <img src="r.jpeg" alt="Slide 2">
+                </div>
+                <div class="slide fade">
+                    <img src="r2.jpeg" alt="Slide 3">
+                </div>
+                <div class="slide fade">
+                    <img src="r2.jpeg" alt="Slide 4">
+                </div>
+            </div>
+            <h2>Welcome to Rendezvous!</h2>
+            <p>RENDEZVOUS DYNAMIC CONCEPT NIG.</p>
+            <ul>
+                <li>🧠 A division of Nwannamani</li>
+                <li>🎓 Always at your service</li>
+            </ul>
+            <p><strong>Office: Old Garki Garage, Lagos Line. Suleja, Niger State. Tel: 08034517753, 08151513148, 08050451363.</strong></p>
+            <button id="close-btn">Close</button>
+        </div>
+    </div>
+    <p>Page views: <span id="viewCount">Loading...</span></p>
+    <!-- Background Music -->
+    <audio autoplay loop id="background-music">
+        <source src="your-music-file.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        // Set the match date and time (4:00 PM on September 8, 2024)
+        var matchDate = new Date("September 8, 2024 16:00:00").getTime();
+
+        // Update the countdown every 1 second
+        var countdownFunction = setInterval(function() {
+
+            // Get today's date and time
+            var now = new Date().getTime();
+
+            // Find the distance between now and the match date
+            var distance = matchDate - now;
+
+            // Time calculations for days, hours, minutes, and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Display the result in the element with id="countdown"
+            if (distance >= 0) {
+                document.getElementById("countdown").innerHTML = "Match starts in " + days + "d " + hours + "h "
+                + minutes + "m " + seconds + "s ";
+            }
+
+            // After the countdown ends
+            if (distance < 0 && distance >= -7200000) { // 2 hours (in milliseconds)
+                document.getElementById("countdown").innerHTML = "Match is ongoing! Score will be displayed at FT";
+            } else if (distance < -7200000) { // After 2 hours
+                document.getElementById("countdown").innerHTML = "Finished FT Score -:-";
+                clearInterval(countdownFunction); // Stop the countdown
+            }
+
+        }, 1000);
+
+        // Set the background music volume to medium
+        document.getElementById("background-music").volume = 0.5;
+
+        // Firebase configuration (replace with your own Firebase config)
+        const firebaseConfig = {
+            apiKey: "AIzaSyATPcqBcNmcQkIz6DVpRQ7Aq98yHJt7dDY",
+            authDomain: "live-score-57927.firebaseapp.com",
+            databaseURL: "https://live-score-57927-default-rtdb.firebaseio.com",
+            projectId: "live-score-57927",
+            storageBucket: "live-score-57927.appspot.com",
+            messagingSenderId: "127539049395",
+            appId: "1:127539049395:web:69ae352cfcd8a42cc651c6",
+            measurementId: "G-7NBDLPCX20"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Reference the counter in the database
+        const counterRef = db.ref('pageViews');
+
+        // Increment the counter when the page is loaded
+        counterRef.transaction(function(currentValue) {
+            return (currentValue || 0) + 1;
+        })
+        .then(() => {
+            // Display the current count
+            counterRef.on('value', function(snapshot) {
+                if (snapshot.exists()) {
+                    document.getElementById('viewCount').innerText = snapshot.val();
+                } else {
+                    document.getElementById('viewCount').innerText = '0';
+                }
+            });
+        })
+        .catch((error) => {
+            console.error("Error incrementing counter: ", error);
+            document.getElementById('viewCount').innerText = 'Error';
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+/* Basic Reset */
+body, h2, p, button, ul {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Pop-Up Ad Styles */
+.ad-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: none; /* Initially hidden */
+    z-index: 1000;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.ad-content {
+    position: relative;
+}
+
+.slideshow-container {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.slide {
+    display: none; /* Hide all slides by default */
+}
+
+.slide img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.ad-content h2 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+
+.ad-content ul {
+    list-style: none;
+    margin: 10px 0;
+    padding: 0;
+}
+
+.ad-content li {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+#ad-popup button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#ad-popup button:hover {
+    background-color: #0056b3;
+}
